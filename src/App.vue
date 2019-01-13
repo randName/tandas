@@ -19,6 +19,9 @@
           <v-card>
             <v-card-title class="headline">Quick Actions</v-card-title>
             <v-card-actions>
+              <v-btn fab small @click="dark = !dark">
+                <v-icon>brightness_4</v-icon>
+              </v-btn>
               <v-spacer></v-spacer>
               <v-btn disabled>Queue <v-icon right>layers</v-icon></v-btn>
               <v-btn @click="use" color="primary" :disabled="goDisable">
@@ -27,6 +30,35 @@
               </v-btn>
             </v-card-actions>
           </v-card>
+        </v-flex>
+        <v-flex xs12>
+          <v-expansion-panel>
+            <v-expansion-panel-content>
+              <div slot="header" class="headline">Recent</div>
+              <v-list>
+                <template v-for="(item, i) in recent">
+                <v-list-tile :key="item.ts">
+                  <v-chip>
+                    <v-avatar><v-icon>schedule</v-icon></v-avatar>
+                    {{ showTime(item.start) }}
+                  </v-chip>
+                  <v-chip v-if="item.duration">
+                    <v-avatar><v-icon>timer</v-icon></v-avatar>
+                    {{ item.duration }} min
+                  </v-chip>
+                  <v-list-tile-content></v-list-tile-content>
+                  <v-list-tile-action>
+                    <v-btn v-if="item.duration" icon disabled>
+                      <v-icon>done</v-icon>
+                    </v-btn>
+                    <v-progress-circular v-else indeterminate size=24></v-progress-circular>
+                  </v-list-tile-action>
+                </v-list-tile>
+                <v-divider v-if="i < recent.length - 1" :key="i" ></v-divider>
+                </template>
+              </v-list>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
         </v-flex>
       </v-layout>
     </v-container>

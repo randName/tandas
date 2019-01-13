@@ -23,11 +23,23 @@
                 <v-icon>brightness_4</v-icon>
               </v-btn>
               <v-spacer></v-spacer>
-              <v-btn disabled>Queue <v-icon right>layers</v-icon></v-btn>
-              <v-btn @click="use" color="primary" :disabled="goDisable">
-                {{ useText }}
-                <v-icon right>directions_run</v-icon>
-              </v-btn>
+              <v-dialog persistent v-model="dialog">
+                <v-btn fab small slot="activator" color="primary" :disabled="status.used">
+                  <v-icon>directions_run</v-icon>
+                </v-btn>
+                <v-card>
+                  <v-card-title class="headline">Go Toilet</v-card-title>
+                  <v-card-text>
+                    <v-btn block large color="primary" @click="use" :disabled="request.wait">
+                      {{ request.text }}
+                    </v-btn>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn @click="dialog = false" :disabled="status.used">Cancel</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
             </v-card-actions>
           </v-card>
         </v-flex>
@@ -42,13 +54,13 @@
                     <v-avatar><v-icon>schedule</v-icon></v-avatar>
                     {{ showTime(item.start) }}
                   </v-chip>
-                  <v-chip v-if="item.duration">
+                  <v-chip v-if="item.end">
                     <v-avatar><v-icon>timer</v-icon></v-avatar>
                     {{ item.duration }} min
                   </v-chip>
                   <v-list-tile-content></v-list-tile-content>
                   <v-list-tile-action>
-                    <v-btn v-if="item.duration" icon disabled>
+                    <v-btn v-if="item.end" icon disabled>
                       <v-icon>done</v-icon>
                     </v-btn>
                     <v-progress-circular v-else indeterminate size=24></v-progress-circular>
@@ -74,17 +86,15 @@ export default {
     return {
       dark: true,
       activity: [],
-      requested: false,
+      dialog: false,
+      request: {
+        wait: false,
+        text: 'Start'
+      },
     }
   },
   firestore,
   computed: {
-    useText () {
-      return this.requested ? 'End' : 'Go'
-    },
-    goDisable () {
-      return this.status.used && !this.requested
-    },
     recent () {
       const duration = null
       return this.activity.map((h) => ({ ...h, ts: h.ts.seconds }))
@@ -118,11 +128,15 @@ export default {
   },
   methods: {
     use () {
+      const u = this.status.used
+      this.request.wait = true
+      this.request.text = u ? 'Start' : 'End'
       this.$firestoreRefs.door.add({
         ts: new Date(),
-        oc: !this.status.used
+        oc: !u
       }).then(() => {
-        this.requested = !this.requested
+        this.request.wait = false
+        if (u) { this.dialog = false }
       })
     },
     showTime (time) {

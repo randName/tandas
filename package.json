@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --no-clean",
+    "deploy": "firebase deploy --only functions",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -20,6 +21,8 @@
     "babel-eslint": "^10.0.1",
     "eslint": "^5.8.0",
     "eslint-plugin-vue": "^5.0.0",
+    "firebase-admin": "^6.5.0",
+    "firebase-functions": "^2.1.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
     "vue-cli-plugin-vuetify": "^0.4.6",

@@ -1,0 +1,11 @@
+{
+  "name": "tandas",
+  "scripts": {
+    "lint": "eslint .",
+    "deploy": "firebase deploy --only functions"
+  },
+  "engines": {
+    "node": "8"
+  },
+  "private": true
+}

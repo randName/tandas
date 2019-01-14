@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Tandas</title>
+ </head>
+ <body>
+  <button onclick="d(0)">Open</button>
+  <button onclick="d(1)">Close</button>
+  <button id="status" onclick="sc()">Status</button>
+  <script>
+    const API = 'https://us-central1-lpa-sg.cloudfunctions.net/door'
+    const b = document.getElementById('status')
+    const s = (i) => fetch(`${API}?d=${i}`).then((r) => r.text())
+    const d = (i) => s(i).then(console.log)
+    const sc = () =>  s('').then((r) => {
+      const [o, t] = r.split(','), n = new Date(parseInt(t)*1000)
+      b.innerHTML = `${o} (${n.toLocaleString()})`
+    })
+  </script>
+ </body>
+</html>

@@ -1,12 +1,13 @@
 const functions = require('firebase-functions')
 const admin = require('firebase-admin')
+const cors = require('cors')({ origin: true })
 
 admin.initializeApp()
 const db = admin.firestore()
 db.settings({ timestampsInSnapshots: true })
 const door = db.collection('door')
 
-exports.door = functions.https.onRequest((req, res) => {
+exports.door = functions.https.onRequest((req, res) => cors(req, res, () => {
   const d = parseInt(req.query.d)
   if (isNaN(d)) {
     return door.orderBy('ts', 'desc').limit(1).get()
@@ -18,4 +19,4 @@ exports.door = functions.https.onRequest((req, res) => {
     return door.add({ oc: Boolean(d), ts: new Date() })
       .then((s) => res.status(200).send(d.toString()))
   }
-})
+}))

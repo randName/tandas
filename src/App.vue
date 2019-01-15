@@ -24,13 +24,13 @@
               </v-btn>
               <v-spacer></v-spacer>
               <v-dialog persistent v-model="dialog">
-                <v-btn fab small slot="activator" color="primary" :disabled="status.used">
+                <v-btn fab small slot="activator" color="primary">
                   <v-icon>directions_run</v-icon>
                 </v-btn>
                 <v-card>
-                  <v-card-title class="headline">Go Toilet</v-card-title>
+                  <v-card-title class="headline">Queue for toilet</v-card-title>
                   <v-card-text>
-                    <v-btn block large color="primary" @click="use" :disabled="request.wait">
+                    <v-btn block large color="primary" disabled>
                       {{ request.text }}
                     </v-btn>
                   </v-card-text>
@@ -89,7 +89,7 @@ export default {
       dialog: false,
       request: {
         wait: false,
-        text: 'Start'
+        text: 'Coming Soon'
       },
     }
   },

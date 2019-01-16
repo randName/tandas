@@ -22,11 +22,14 @@ const db = firebase.firestore()
 db.settings({ timestampsInSnapshots: true })
 
 const door = db.collection('door')
+const state = db.collection('status')
+const maintenance = state.doc('maintenance')
 const activity = door.where('ts', '>', d).orderBy('ts')
 
 export default function () {
   return {
     door,
     activity,
+    maintenance,
   }
 }

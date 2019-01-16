@@ -23,7 +23,7 @@
                 <v-icon>brightness_4</v-icon>
               </v-btn>
               <v-spacer></v-spacer>
-              <v-dialog persistent v-model="dialog">
+              <v-dialog v-model="dialog">
                 <v-btn fab small slot="activator" color="primary">
                   <v-icon>directions_run</v-icon>
                 </v-btn>
@@ -36,7 +36,7 @@
                   </v-card-text>
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn @click="dialog = false" :disabled="status.used">Cancel</v-btn>
+                    <v-btn @click="dialog = false">Cancel</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
@@ -87,6 +87,7 @@ export default {
       dark: true,
       activity: [],
       dialog: false,
+      maintenance: null,
       request: {
         wait: false,
         text: 'Coming Soon'
@@ -113,10 +114,12 @@ export default {
     },
     status () {
       const l = this.recent[0]
+      const m = this.maintenance ? this.maintenance.v : null
+
       const used = l ? (!l.end) : null
-      const color = used ? 'error' : 'success'
-      const icon = l ? (used ? 'remove' : 'check') + '_circle' : 'sync'
-      const text = l ? 'Since ' + this.showTime(l.end || l.start) : 'Getting status ...'
+      const color = m ? 'warning' : (used ? 'error' : 'success')
+      const icon = m ? 'offline_bolt' : (l ? (used ? 'remove' : 'check') + '_circle' : 'sync')
+      const text = m ? 'Maintenance' : (l ? 'Since ' + this.showTime(l.end || l.start) : 'Getting status ...')
 
       return {
         used,
